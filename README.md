@@ -6,7 +6,10 @@
 - Spring Boot 3.5.6
   - Spring Data JPA
   - Spring Validation
-- H2 Database (인 메모리로 실행)
+- H2 Database
+  - 인 메모리로 실행
+  - jdbc url = jdbc:h2:mem:boarddb
+  - username = sa
 - Thymeleaf
 - Lombok
-- P6Spy (SQL 로그 출력 및 쿼리 성능 분석용 라이브러리)
+- P6Spy (SQL 로그 출력)
