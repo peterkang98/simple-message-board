@@ -1,0 +1,10 @@
+# 간단한 CRUD 게시판 프로젝트
+
+## 기술 스택
+- Spring Boot 3.5.6
+  - Spring Data JPA
+  - Spring Validation
+- H2 Database (인 메모리로 실행)
+- Thymeleaf
+- Lombok
+- P6Spy (SQL 로그 출력 및 쿼리 성능 분석용 라이브러리)
