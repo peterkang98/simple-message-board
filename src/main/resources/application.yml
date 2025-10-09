@@ -6,6 +6,9 @@ spring:
     ansi:
       enabled: always
 
+  profiles:
+    active: local
+
   messages:
     fallback-to-system-locale: false
 
