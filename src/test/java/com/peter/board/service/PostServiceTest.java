@@ -3,17 +3,20 @@ package com.peter.board.service;
 import com.peter.board.domain.Comment;
 import com.peter.board.domain.Post;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -69,20 +72,27 @@ class PostServiceTest {
 
 	@Test
 	void findAll() {
-		Post post = new Post("제목1", "내용1", "동현");
-		Post post2 = new Post("제목2", "내용2", "경환");
-		postService.save(post);
-		postService.save(post2);
+		for (int i = 1; i <= 15; i++) {
+			Post post = new Post("제목" + i, "내용", "동현");
+			postService.save(post);
+		}
 
 		em.flush();
 		em.clear();
 
-		List<Post> allPosts = postService.findAll();
+		// 생성된 날짜를 내림차순으로 정렬한 요소들 중에서 처음 5개 가져오기
+		Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
+		Page<Post> page = postService.findAll(pageable);
+		List<Post> posts = page.getContent();
 
-		assertThat(allPosts.size()).isEqualTo(2);
+		assertThat(page.getTotalElements()).isEqualTo(15);
+		assertThat(page.getTotalPages()).isEqualTo(3);
+		assertThat(posts.size()).isEqualTo(5);
 
-		assertThat(allPosts.get(0).getId()).isEqualTo(post.getId());
-		assertThat(allPosts.get(1).getId()).isEqualTo(post2.getId());
+		for (int i = 0; i < posts.size() - 1; i++) {
+			System.out.println("posts.get(i).getCreatedDate() = " + posts.get(i).getCreatedDate());
+			assertThat(posts.get(i).getCreatedDate()).isAfterOrEqualTo(posts.get(i + 1).getCreatedDate());
+		}
 	}
 
 	@Test
