@@ -25,10 +25,9 @@ public class Comment extends DateBaseEntity{
 	@JoinColumn(name = "post_id", nullable = false)
 	private Post post;
 
-	public Comment(String content, String author, Post post) {
+	public Comment(String content, String author) {
 		this.content = content;
 		this.author = author;
-		this.post = post;
 	}
 
 	// 연관 관계 설정

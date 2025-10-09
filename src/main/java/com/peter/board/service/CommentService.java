@@ -17,7 +17,8 @@ public class CommentService {
 
 	public void addComment(Long postId, String author, String content) {
 		Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
-		Comment comment = new Comment(content, author, post);
+		Comment comment = new Comment(content, author);
+		post.addComment(comment);
 		commentRepository.save(comment);
 	}
 
