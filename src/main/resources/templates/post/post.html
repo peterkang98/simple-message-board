@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.title}">게시물 상세</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .comment-actions { float: right; }
+        .is-invalid { border-color: #dc3545; }
+    </style>
+    <script>
+        function confirmDelete() {
+            return confirm("정말 삭제하시겠습니까?");
+        }
+    </script>
+</head>
+<body class="container mt-4">
+<h1 th:text="${post.title}">게시물 제목</h1>
+
+<p>
+    <strong>작성자:</strong> <span th:text="${post.author}"></span> |
+    <strong>작성일:</strong> <span th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd')}"></span> |
+    <strong>수정일:</strong> <span th:text="${#temporals.format(post.lastModifiedDate, 'yyyy-MM-dd')}"></span>
+</p>
+<hr>
+<p th:text="${post.content}">게시물 내용</p>
+
+<div class="mb-3">
+    <a th:href="@{/posts}" class="btn btn-secondary">목록으로</a>
+    <a th:href="@{/posts/{id}/edit(id=${post.id})}" class="btn btn-primary">수정</a>
+</div>
+
+<hr>
+<h3>댓글</h3>
+
+<!-- 댓글 작성 -->
+<form th:action="@{/posts/{postId}/comments/new(postId=${post.id})}" th:object="${commentForm}" method="post" class="mb-3">
+    <div class="row g-2">
+        <div class="col-md-3">
+            <input type="text" th:field="*{author}" class="form-control" placeholder="작성자 (익명 가능)">
+        </div>
+        <div class="col-md-7">
+            <input type="text" th:field="*{content}" class="form-control" placeholder="댓글 내용"
+                   th:classappend="${commentError}? ' is-invalid'">
+            <div th:if="${commentError}" class="text-danger">내용은 필수입니다.</div>
+        </div>
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-success">댓글 추가</button>
+        </div>
+    </div>
+</form>
+
+<!-- 댓글 목록 -->
+<ul class="list-group">
+    <li class="list-group-item d-flex justify-content-between align-items-center"
+        th:each="comment : ${post.comments}">
+
+        <!-- 댓글 작성자 + 내용 -->
+        <div>
+            <strong th:text="${comment.author}"></strong>:
+            <span th:text="${comment.content}" class="ms-1"></span>
+        </div>
+
+        <!-- 수정 / 삭제 버튼-->
+        <div class="d-flex align-items-center">
+
+            <!-- 수정 폼 (에러 발생 시 표시) -->
+            <form th:if="${errorCommentId == comment.id}"
+                  th:action="@{/posts/{postId}/comments/{id}/edit(postId=${post.id}, id=${comment.id})}"
+                  th:object="${commentForm}"
+                  method="post"
+                  class="d-flex align-items-center me-2">
+                <input type="text"
+                       th:field="*{content}"
+                       class="form-control form-control-sm me-1"
+                       style="width:180px"
+                       th:classappend="${#fields.hasErrors('content')} ? ' is-invalid'">
+                <div th:if="${#fields.hasErrors('content')}"
+                     class="text-danger small me-1"
+                     th:errors="*{content}"></div>
+                <button type="submit" class="btn btn-sm btn-primary me-1">수정</button>
+            </form>
+
+            <!-- 일반 수정 폼 (에러 아닐 때) -->
+            <form th:if="${errorCommentId != comment.id}"
+                  th:action="@{/posts/{postId}/comments/{id}/edit(postId=${post.id}, id=${comment.id})}"
+                  th:object="${commentForm}"
+                  method="post"
+                  class="d-flex align-items-center me-2">
+                <input type="text"
+                       th:field="*{content}"
+                       class="form-control form-control-sm me-1"
+                       style="width:180px"
+                       placeholder="수정 내용">
+                <button type="submit" class="btn btn-sm btn-primary me-1">수정</button>
+            </form>
+
+            <!-- 삭제 버튼 -->
+            <form th:action="@{/posts/{postId}/comments/{id}/delete(postId=${post.id}, id=${comment.id})}"
+                  method="post"
+                  class="d-inline"
+                  onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
+                <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+            </form>
+        </div>
+    </li>
+</ul>
+</body>
+</html>
