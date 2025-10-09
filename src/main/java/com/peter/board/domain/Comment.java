@@ -19,7 +19,6 @@ public class Comment extends DateBaseEntity{
 	private String content;
 	private String author;
 
-	@Setter
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "post_id", nullable = false)
 	private Post post;
@@ -28,5 +27,15 @@ public class Comment extends DateBaseEntity{
 		this.content = content;
 		this.author = author;
 		this.post = post;
+	}
+
+	// 연관 관계 설정
+	// 서비스나 컨트롤러 등 외부 계층에서는 호출할 수 없게 protected로 막음
+	protected void assignTo(Post post) {
+		this.post = post;
+	}
+
+	public void update(String content) {
+		this.content = content;
 	}
 }

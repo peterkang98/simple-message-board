@@ -36,7 +36,7 @@ public class Post extends DateBaseEntity{
 	// 연관 관계 편의 메소드 / 댓글 추가 기능
 	public void addComment(Comment comment) {
 		comments.add(comment);
-		comment.setPost(this);
+		comment.assignTo(this);
 	}
 
 	// 게시글 수정 메소드
