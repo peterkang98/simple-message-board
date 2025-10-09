@@ -47,15 +47,6 @@ public class CommentController {
 	{
 		if (bindingResult.hasErrors()) {
 			Post post = postService.findByIdWithComments(postId);
-			Comment comment = post.getComments().stream()
-					.filter(c -> c.getId().equals(id))
-					.findFirst()
-					.orElse(null);
-
-			if (comment != null && !StringUtils.hasText(commentForm.getContent())) {
-				commentForm.setContent(comment.getContent());
-			}
-
 			model.addAttribute("post", post);
 			model.addAttribute("errorCommentId", id);
 			return "post/post";
