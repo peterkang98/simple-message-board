@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-class PostServiceTest {
+class ServiceTest {
 	@Autowired
 	PostService postService;
 
