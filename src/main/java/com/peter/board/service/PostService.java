@@ -9,25 +9,25 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class PostService {
 	private final PostRepository postRepository;
 
+	@Transactional(readOnly = true)
 	public Post findById(Long id) {
 		return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 	}
 
+	@Transactional(readOnly = true)
 	public List<Post> findAll() {
 		return postRepository.findAll();
 	}
 
-	@Transactional
 	public void save(Post post) {
 		postRepository.save(post);
 	}
 
-	@Transactional
 	public void update(Long id, String title, String content) {
 		Post post = findById(id);
 		post.update(title, content);

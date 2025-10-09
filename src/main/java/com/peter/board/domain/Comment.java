@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -37,5 +39,17 @@ public class Comment extends DateBaseEntity{
 
 	public void update(String content) {
 		this.content = content;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		Comment comment = (Comment) o;
+		return Objects.equals(getId(), comment.getId()) && Objects.equals(getContent(), comment.getContent()) && Objects.equals(getAuthor(), comment.getAuthor());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId(), getContent(), getAuthor());
 	}
 }

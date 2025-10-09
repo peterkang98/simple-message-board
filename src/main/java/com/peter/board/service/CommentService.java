@@ -20,4 +20,15 @@ public class CommentService {
 		Comment comment = new Comment(content, author, post);
 		commentRepository.save(comment);
 	}
+
+	public void updateComment(Long commentId, String content) {
+		Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+		comment.update(content);
+	}
+
+	public void deleteComment(Long postId, Long commentId) {
+		Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다."));
+		Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+		post.getComments().remove(comment);
+	}
 }
