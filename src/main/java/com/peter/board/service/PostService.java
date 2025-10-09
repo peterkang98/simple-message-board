@@ -16,7 +16,14 @@ public class PostService {
 
 	@Transactional(readOnly = true)
 	public Post findById(Long id) {
-		return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+		return postRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+	}
+
+	@Transactional(readOnly = true)
+	public Post findByIdWithComments(Long id) {
+		return postRepository.findByIdWithComments(id)
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
 	}
 
 	@Transactional(readOnly = true)
